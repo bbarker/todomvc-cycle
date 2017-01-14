@@ -1,4 +1,5 @@
 .idea/
 ignore/
+js/
 node_modules/
 npm-debug.log
