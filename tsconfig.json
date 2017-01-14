@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "allowJs": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "forceConsistentCasingInFileNames": true,
+    "outDir": "js",
+    "sourceMap": true
+  },
+  "exclude": [
+    "node_modules",
+    "dist",
+    ".vscode",
+    "docs"
+  ]
+}

@@ -1,17 +1,35 @@
 import xs from 'xstream';
 import dropRepeats from 'xstream/extra/dropRepeats';
+import * as cycleHistory from '@cycle/history'
+import {VNode, DOMSource} from "@cycle/dom";
 import {ENTER_KEY, ESC_KEY} from '../../utils';
+import {Stream} from "xstream";
+
+import {
+  TaskListAction,
+  ChangeRouteAction, isChangeRouteAction,
+  UrlAction, isUrlAction,
+  ClearInputAction, isClearInputAction,
+  InsertTodoAction, isInsertTodoAction,
+  ToggleTodoAction, isToggleTodoAction,
+  DeleteTodoAction, isDeleteTodoAction,
+  EditTodoAction, isEditTodoAction,
+  ToggleAllAction, isToggleAllAction,
+  DeleteCompletedsAction, isDeleteCompletedsAction,
+  toTaskListAction,
+} from './actions';
+import {TaskAction, isToggleAction, isDestroyAction, isDoneEditAction} from "../Task/actions";
 
 // THE INTENT FOR THE LIST
-export default function intent(DOMSource, History) {
-  return xs.merge(
+export default function intent(DOMSource: DOMSource, History: Stream<cycleHistory.Location>): Stream<TaskListAction> {
+  return xs.merge<TaskListAction>(
     // THE ROUTE STREAM
     // A stream that provides the path whenever the route changes.
     History
       .startWith({pathname: '/'})
       .map(location => location.pathname)
       .compose(dropRepeats())
-      .map(payload => ({type: 'changeRoute', payload})),
+      .map(payload => <ChangeRouteAction> ({type: 'changeRoute', payload})),
 
     // THE URL STREAM
     // A stream of URL clicks in the app

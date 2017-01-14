@@ -1,5 +1,19 @@
 import xs from 'xstream';
 
+import {TaskAction} from "./actions";
+import {Stream} from "xstream";
+
+export interface TaskProperties {
+  title: string,
+  completed: boolean
+}
+
+export interface TaskModel {
+  title: string,
+  isCompleted: boolean,
+  isEditing: boolean
+}
+
 function makeReducer$(action$) {
   let startEditReducer$ = action$
     .filter(action => action.type === 'startEdit')
@@ -46,7 +60,7 @@ function makeReducer$(action$) {
   );
 }
 
-function model(props$, action$) {
+function model(props$: Stream<TaskProperties>, action$: Stream<TaskAction>): Stream<TaskModel> {
   // THE SANITIZED PROPERTIES
   // If the list item has no data set it as empty and not completed.
   let sanitizedProps$ = props$.startWith({title: '', completed: false});

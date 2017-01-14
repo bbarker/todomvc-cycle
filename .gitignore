@@ -3,3 +3,10 @@ ignore/
 js/
 node_modules/
 npm-debug.log
+
+# Some possibly reasonable defaults for vscode:
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json

@@ -1,8 +1,14 @@
 import {run} from '@cycle/xstream-run';
 import {makeDOMDriver} from '@cycle/dom';
-import {makeHistoryDriver} from '@cycle/history'
+// Quick hack:
+declare var require: any
+const storage: any = require('@cycle/storage');
+const makeHistoryDriver = storage.makeHistoryDriver;
+//import {makeHistoryDriver} from '@cycle/history'
+const storageDriver = storage.storageDriver;
+//import storageDriver from '@cycle/storage';
 import {createHistory} from 'history';
-import storageDriver from '@cycle/storage';
+
 // THE MAIN FUNCTION
 // This is the todo list component.
 import TaskList from './components/TaskList/index';

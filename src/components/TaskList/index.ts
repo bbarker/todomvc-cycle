@@ -1,3 +1,4 @@
+import * as cycleHistory from '@cycle/history'
 import xs from 'xstream';
 import isolate from '@cycle/isolate'
 import intent from './intent';
@@ -7,6 +8,19 @@ import deserialize from './storage-source';
 import serialize from './storage-sink';
 import Task from '../Task/index';
 import Collection from '@cycle/collection';
+import {Stream} from "xstream";
+import {DOMSource} from "@cycle/dom/xstream-typings";
+import {VNode} from "@cycle/dom";
+
+export type Sources = {
+  DOM: DOMSource,
+  storage: any
+  History: Stream<cycleHistory.Location>
+}
+
+export type Sinks = {
+  DOM: Stream<VNode>
+}
 
 // THE TASKLIST COMPONENT
 // This is the TaskList component which is being exported below.

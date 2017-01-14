@@ -4,7 +4,7 @@
   "author": "Andre Staltz",
   "repository": {
     "type": "git",
-    "url": "git@github.com:staltz/todomvc-cycle.git"
+    "url": "git@github.com:bbarker/todomvc-cycle.git"
   },
   "license": "MIT",
   "private": true,
@@ -15,6 +15,13 @@
     {
       "name": "Kahlil Lechelt",
       "email": "hello@kahlil.info"
+    },
+    {
+      "name": "Michael Maier"
+    },
+    {
+      "name": "Brandon Barker",
+      "email": "brandon.barker@cornell.edu"
     }
   ],
   "dependencies": {
@@ -22,14 +29,16 @@
     "@cycle/dom": "10.0.0-rc33",
     "@cycle/history": "^4.0.0",
     "@cycle/isolate": "1.4.x",
-    "@cycle/storage": "3.0.0-rc2",
+    "@cycle/storage": "3.0.0",
+    "//": "For an alternative, see https://github.com/SuperManitu/cyclejs-storage",
     "@cycle/xstream-run": "3.0.0",
-    "history": "^3.0.0",
+    "history": "3.2.1",
     "todomvc-app-css": "2.0.3",
     "todomvc-common": "1.0.1",
     "xstream": "^5.0.5"
   },
   "devDependencies": {
+    "@types/node": "7.0.0",
     "babel-plugin-transform-object-rest-spread": "^6.6.5",
     "babel-preset-es2015": "^6.3.13",
     "babel-register": "^6.4.3",
@@ -38,12 +47,15 @@
     "live-server": "^0.9.0",
     "mkdirp": "^0.5.1",
     "npm-run-all": "^1.4.0",
+    "tsify": "3.0.0",
+    "typings": "2.1.0",
     "uglify-js": "2.6.1",
     "watchify": "^3.6.1"
   },
   "scripts": {
-    "build-debug": "mkdirp js && browserify src/app.js -t babelify --outfile js/app.js",
-    "watch:js": "mkdirp js && watchify src/app.js -t babelify --outfile js/app.js -dv",
+    "build-debug": "mkdirp js && browserify src/app.ts -p [ tsify --noImplicitAny ] --debug -t babelify --outfile js/app.js",
+    "postinstall": "typings install --save",
+    "watch:js": "mkdirp js && watchify src/app*.ts -p [ tsify --noImplicitAny ] --debug -t babelify --outfile js/app.js -dv",
     "serve": "live-server ./",
     "uglify": "uglifyjs js/app.js -o js/app.min.js",
     "build": "npm run build-debug && npm run uglify",
