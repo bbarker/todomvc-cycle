@@ -3,10 +3,8 @@ import {makeDOMDriver} from '@cycle/dom';
 // Quick hack:
 declare var require: any
 const storage: any = require('@cycle/storage');
-const makeHistoryDriver = storage.makeHistoryDriver;
-//import {makeHistoryDriver} from '@cycle/history'
 const storageDriver = storage.storageDriver;
-//import storageDriver from '@cycle/storage';
+import {makeHistoryDriver} from '@cycle/history'
 import {createHistory} from 'history';
 
 // THE MAIN FUNCTION
@@ -26,7 +24,7 @@ run(main, {
   DOM: makeDOMDriver('.todoapp', {transposition: true}),
   // THE HISTORY DRIVER
   // A driver to interact with browser history
-  History: makeHistoryDriver(createHistory(), {capture: true}),
+  History: makeHistoryDriver(createHistory() as any, {capture: true}),
   // THE STORAGE DRIVER
   // The storage driver which can be used to access values for
   // local- and sessionStorage keys as streams.
