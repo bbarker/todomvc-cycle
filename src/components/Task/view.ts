@@ -1,16 +1,20 @@
-import {button, div, input, label, li} from '@cycle/dom';
+import {button, div, input, label, li, VNode} from '@cycle/dom';
 
-function view(state$) {
-  return state$.map(({title, completed, editing}) => {
+import {Stream} from 'xstream';
+import {TaskModel} from './model';
+
+function view(state$: Stream<TaskModel>) {
+  return state$.map(data => {
+    let {title, isCompleted, isEditing} = data;
     let todoRootClasses = {
-      completed,
-      editing,
+      completed: isCompleted,
+      editing: isEditing,
     };
 
     return li('.todoRoot', {class: todoRootClasses}, [
       div('.view', [
         input('.toggle', {
-          props: {type: 'checkbox', checked: completed},
+          props: {type: 'checkbox', checked: isCompleted},
         }),
         label(title),
         button('.destroy')
@@ -18,9 +22,10 @@ function view(state$) {
       input('.edit', {
         props: {type: 'text'},
         hook: {
-          update: (oldVNode, {elm}) => {
+          update: (oldVNode: VNode, vnode: VNode) => {
+            let elm = vnode.elm as HTMLInputElement;
             elm.value = title;
-            if (editing) {
+            if (isEditing) {
               elm.focus();
               elm.selectionStart = elm.value.length;
             }

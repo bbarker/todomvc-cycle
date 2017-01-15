@@ -1,6 +1,6 @@
 import xs from 'xstream';
 
-import {TaskAction} from "./actions";
+import {TaskAction, ToggleAction} from "./actions";
 import {Stream} from "xstream";
 
 export interface TaskProperties {
@@ -14,61 +14,32 @@ export interface TaskModel {
   isEditing: boolean
 }
 
-function makeReducer$(action$) {
-  let startEditReducer$ = action$
-    .filter(action => action.type === 'startEdit')
-    .mapTo(function startEditReducer(data) {
-      return {
-        ...data,
-        editing: true
-      };
-    });
-
-  let doneEditReducer$ = action$
-    .filter(action => action.type === 'doneEdit')
-    .map(action => function doneEditReducer(data) {
-      return {
-        ...data,
-        title: action.payload,
-        editing: false
-      };
-    });
-
-  let cancelEditReducer$ = action$
-    .filter(action => action.type === 'cancelEdit')
-    .mapTo(function cancelEditReducer(data) {
-      return {
-        ...data,
-        editing: false
-      };
-    });
-
-  let toggleReducer$ = action$
-    .filter(action => action.type === 'toggle')
-    .map(action => function toggleReducer(data) {
-      return {
-        ...data,
-        completed: action.payload
-      };
-    });
-
-  return xs.merge(
-    startEditReducer$,
-    doneEditReducer$,
-    cancelEditReducer$,
-    toggleReducer$
-  );
-}
-
 function model(props$: Stream<TaskProperties>, action$: Stream<TaskAction>): Stream<TaskModel> {
   // THE SANITIZED PROPERTIES
   // If the list item has no data set it as empty and not completed.
   let sanitizedProps$ = props$.startWith({title: '', completed: false});
-  let reducer$ = makeReducer$(action$);
 
-  return sanitizedProps$.map(props =>
-    reducer$.fold((data, reducer) => reducer(data), props)
-  ).flatten().remember();
+  // THE EDITING STREAM
+  // Create a stream that emits booleans that represent the
+  // "is editing" state.
+  let editing$: Stream<boolean> =
+    xs.merge(
+      action$.filter(a => a.type === 'startEdit').mapTo(true),
+      action$.filter(a => a.type === 'doneEdit').mapTo(false),
+      action$.filter(a => a.type === 'cancelEdit').mapTo(false),
+      action$.filter(a => a.type === 'toggle').map(a => !!((<ToggleAction> a).payload))
+    ).startWith(false);
+
+
+
+  return xs.combine(sanitizedProps$, editing$)
+    .map(function (data: [TaskProperties, boolean]): TaskModel {
+      let [{title, completed}, editing] = data;
+      return {
+        title,
+        isCompleted: completed,
+        isEditing: editing,
+      };
+    });
 }
-
 export default model;

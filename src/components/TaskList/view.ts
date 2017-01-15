@@ -1,5 +1,8 @@
 import {a, button, div, footer, h1, header, input, li,
-        section, span, strong, ul} from '@cycle/dom';
+  section, span, strong, ul} from '@cycle/dom';
+import {VNode} from '@cycle/dom';
+import {TodosData} from "./model";
+import {Stream} from "xstream";
 
 function renderHeader() {
   return header('.header', [
@@ -12,15 +15,16 @@ function renderHeader() {
         name: 'newTodo'
       },
       hook: {
-        update: (oldVNode, {elm}) => {
-          elm.value = '';
+        update: (oldVNode: VNode, vnode: VNode) => {
+          // TODO check if value exists
+          (vnode.elm as any).value = '';
         },
       },
     })
   ]);
 }
 
-function renderMainSection(todosData) {
+function renderMainSection(todosData: TodosData) {
   let allCompleted = todosData.list.reduce((x, y) => x && y.completed, true);
   let sectionStyle = {'display': todosData.list.length ? '' : 'none'};
 
@@ -30,21 +34,24 @@ function renderMainSection(todosData) {
     }),
     ul('.todo-list', todosData.list
       .filter(todosData.filterFn)
-      .map(data => data.todoItem.DOM)
+      .map(data => data.todoItem!.DOM)
     )
   ]);
 }
 
-function renderFilterButton(todosData, filterTag, path, label) {
+interface FilterTag {
+
+}
+
+function renderFilterButton(todosData: TodosData, filterTag: FilterTag, path: string, label: string) {
   return li([
-    a({
-      props: {href: path},
-      class: {selected: todosData.filter === filterTag}
-    }, label)
+    todosData.filter === filterTag ?
+      a('.selected', {props: {href: path}}, label) :
+      a({props: {href: path}}, label)
   ]);
 }
 
-function renderFooter(todosData) {
+function renderFooter(todosData: TodosData) {
   let amountCompleted = todosData.list
     .filter(todoData => todoData.completed)
     .length;
@@ -62,8 +69,8 @@ function renderFooter(todosData) {
       renderFilterButton(todosData, 'completed', '/completed', 'Completed'),
     ]),
     (amountCompleted > 0 ?
-      button('.clear-completed', 'Clear completed (' + amountCompleted + ')')
-      : null
+        button('.clear-completed', 'Clear completed (' + amountCompleted + ')')
+        : null
     )
   ])
 }
@@ -73,7 +80,7 @@ function renderFooter(todosData) {
 // from the model function and turns it into a
 // virtual DOM stream that is then ultimately returned into
 // the DOM sink in the index.js.
-export default function view(todos$) {
+export default function view(todos$: Stream<TodosData>) {
   return todos$.map(todos =>
     div([
       renderHeader(),

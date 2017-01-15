@@ -1,12 +1,16 @@
+import {TodosData} from "./model";
+import {Stream} from "xstream/index";
+
 // Turn the data object that contains
 // the todos into a string for localStorage.
-export default function serialize(todos$) {
+export default function serialize(todos$: Stream<TodosData>): Stream<string> {
   return todos$.map(todosData => JSON.stringify(
     {
-      list: todosData.map(todoData =>
+      list: todosData.list.map(todoData =>
         ({
           title: todoData.title,
-          completed: todoData.completed
+          completed: todoData.completed,
+          id: todoData.id
         })
       )
     }

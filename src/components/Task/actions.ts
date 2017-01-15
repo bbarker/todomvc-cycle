@@ -24,6 +24,7 @@ export interface StartEditAction {
 
 export interface ToggleAction {
   type: 'toggle'
+  payload: string
 }
 
 export function isCancelEditAction(action: TaskAction): action is CancelEditAction {
