@@ -4,7 +4,7 @@
   "author": "Andre Staltz",
   "repository": {
     "type": "git",
-    "url": "git@github.com:bbarker/todomvc-cycle.git"
+    "url": "git@github.com:bbarker/todomvc-cycle.git#typescript"
   },
   "license": "MIT",
   "private": true,
@@ -26,7 +26,7 @@
   ],
   "dependencies": {
     "@cycle/collection": "^0.3.0",
-    "@cycle/dom": "10.0.0-rc33",
+    "@cycle/dom": "10.0.0",
     "@cycle/history": "^4.0.0",
     "@cycle/isolate": "1.4.x",
     "@cycle/storage": "3.0.0",
